@@ -1,0 +1,345 @@
+﻿@model HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!doctype html>
+<html class="no-js " lang="en">
+
+<body>
+    <section id="home" class="video-section js-height-full">
+        @* <div class="overlay"></div> *@
+        <div class="home-text-wrapper relative container">
+            <div class="home-message wow slideInUp">
+                <p>Edulogy Learning Platform</p>
+                <small>
+                    🚀 Welcome to Edulogy, where learning meets innovation! Our platform is designed to provide a
+                    personalized and engaging educational experience tailored to your needs. Whether you're a student
+                    looking to explore new courses or an instructor ready to share knowledge, we offer interactive
+                    lessons, quizzes, and progress tracking to ensure a seamless learning journey.
+                    <br />
+                    <br />
+                    💡 Not sure where to start? Our smart recommendation system analyzes your technical skills and
+                    suggests the best learning track for you. Discover courses that match your strengths and goals,
+                    helping you progress efficiently and stay ahead in your field.
+                    <br />
+                    <br />
+
+                    🎓 Start your journey today and take control of your education!
+                </small>
+            </div>
+        </div>
+
+        <div class="slider-bottom">
+            <span>Explore <i class="fa fa-angle-down"></i></span>
+        </div>
+
+        <div style="z-index: -1; position: absolute; inset: 0px; overflow: hidden;">
+            <img width="1920" height="1200" style="filter: blur(5px)" src="~/images/img1.jpg" alt="a" />
+        </div>
+    </section>
+
+
+
+    <section class="section" id="tracks"
+        style="box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08); padding: 60px 0; margin-bottom: 40px; background-color: #ffffff; border-radius: 12px;">
+        <div class="container">
+            <header class="section-header text-center mb-5">
+                <h2 class="section-title">🚀 Discover Your Learning Path</h2>
+                <p class="section-description">Whether you're just starting out or looking to specialize, we’ll help you
+                    find the perfect track.</p>
+            </header>
+
+            <div class="row track-grid">
+                <div class="track-layout">
+
+                    <div class="track-item recommendation">
+                        <div class="track-content">
+                            <div>
+                                <h3>🤔 Not sure which learning track suits you best?</h3>
+                                <p class="track-description">
+                                    Just describe your skills and interests, and our smart recommendation system will
+                                    guide you to the most suitable path. It's a simple way to get started with
+                                    confidence and clarity.<br><br>
+                                    <strong>Find your perfect learning path based on your interests and skills.</strong>
+                                </p>
+                            </div>
+                            <div class="btn-wrapper">
+                                <a asp-action="index" asp-controller="recommendation" class="btn btn-primary">Discover
+                                    My Track</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vertical-divider"></div>
+
+                    <div class="track-item all-tracks">
+                        <div class="track-content">
+                            <div>
+                                <h3>🧭 Explore Courses in Your Track</h3>
+                                <p class="track-description">
+                                    Dive into courses in your chosen field.<br><br>
+                                    <strong>Explore courses and start learning.</strong>
+                                </p>
+                                <ul class="track-list">
+                                    <li>👨‍💻 <strong>Development</strong> – Build modern websites and applications.
+                                    </li>
+                                    <li>🤖 <strong>Artificial Intelligence</strong> – Create stunning visuals.</li>
+                                    <li>📊 <strong>Data Science</strong> – Analyze data insights.</li>
+                                    <li>🔒 <strong>Cybersecurity</strong> – Protect digital systems.</li>
+                                    <li>📱 <strong>UI/UX Design</strong> – Design user-friendly apps.</li>
+                                </ul>
+                            </div>
+                            <div class="btn-wrapper">
+                                <a asp-action="showall" asp-controller="track" class="btn btn-primary">View All
+                                    Tracks</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section courses-section" id="courses">
+        <div class="container">
+            <header class="section-header text-center">
+                <h2 class="section-title">📚 Explore Our Most Popular Courses</h2>
+                <p class="section-description">Unlock your potential with our carefully curated and comprehensive
+                    courses.</p>
+            </header>
+
+            <div class="course-slider-wrapper">
+                <button onclick="scrollSlider(-1)" class="slider-button slider-button-prev">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+
+                <div id="courseSlider" class="course-slider">
+                    @foreach (var course in Model.courses)
+                    {
+                        <div class="course-card">
+                            <a asp-action="Details" asp-controller="Course"
+                                asp-route-CourseID="@course.ID">
+                                <img src="@course.ImagePath" alt="@course.Title" />
+                                <h3>@course.Title</h3>
+                                <p>@course.Description</p>
+                                <div class="course-details">
+                                    <span>📅 <strong>Duration:</strong> @course.Duration</span><br>
+                                    <span>🎓 <strong>Level:</strong> <span
+                                            class="course-level">@course.DifficultyLevel</span></span><br>
+                                    <span>👤 <strong>Instructor:</strong> @course.InstructorName</span><br>
+                                    <span>⭐ <strong>Enrolled:</strong> @course.EnrolledCount</span>
+                                </div>
+                                <a asp-action="Details" asp-controller="Course"
+                                asp-route-CourseID="@course.ID" class="btn explore-btn">
+                                    Explore <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </a>
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <button onclick="scrollSlider(1)" class="slider-button slider-button-next">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="btn-wrapper">
+                <a asp-action="ShowAll" asp-controller="Course" class="btn btn-primary">View All Courses</a>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        const courseSlider = document.getElementById('courseSlider');
+        const courseCards = document.querySelectorAll('.course-card');
+        const exploreButtons = document.querySelectorAll('.explore-btn');
+
+        function scrollSlider(direction) {
+            const scrollAmount = 350; // Adjust as needed for smoother scrolling
+            courseSlider.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        // Fix for item moving above and disappearing
+        courseCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)'; // Increased translateY for a bigger lift
+                card.style.boxShadow = '0 12px 24px rgba(0,0,0,0.15)'; // Increased boxShadow for more emphasis
+                card.style.zIndex = '5'; // Ensure the hovered card stays above others
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 6px 16px rgba(0,0,0,0.08)';
+                card.style.zIndex = 'auto'; // Reset z-index
+            });
+        });
+
+        // Optional: Add hover effect to buttons (including the new explore buttons)
+        const buttons = document.querySelectorAll('button[onclick^="scrollSlider"], .btn-wrapper .btn-primary, .explore-btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                const originalBg = window.getComputedStyle(button).backgroundColor;
+                button.setAttribute('data-original-bg', originalBg);
+                button.style.backgroundColor = '#E0A800'; // Slightly darker shade for hover
+                button.style.boxShadow = '0 3px 8px rgba(0,0,0,0.15)';
+            });
+            button.addEventListener('mouseleave', () => {
+                const originalBg = button.getAttribute('data-original-bg');
+                button.style.backgroundColor = originalBg;
+                button.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+                button.removeAttribute('data-original-bg');
+            });
+        });
+    </script>
+
+
+
+
+    <section class="section db p120" id="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tagline-message text-center">
+                        <h3>Personalized Learning, Smarter Choices!</h3>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section><!-- end section -->
+
+    <section class="section gb nopadtop">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box m30 hei">
+                        <i class="flaticon-computer-tool-for-education"></i>
+                        <h4>Track Recommendation System</h4>
+                        <p>Get personalized career path suggestions based on your current skill set and interests.</p>
+                    </div>
+                </div><!-- end col -->
+
+                <div class="col-md-6">
+                    <div class="box m30 hei">
+                        <i class="flaticon-computer-tool-for-education"></i>
+                        <h4>Guided Learning Journeys</h4>
+                        <p>
+                            Our platform offers a personalized, step-by-step learning experience tailored to each user's
+                            skills and goals. Whether you're just starting out or looking to specialize,
+                            the system recommends the right career paths and breaks them down into manageable learning
+                            stages — helping you stay focused, motivated, and always moving forward.
+                        </p>
+                    </div>
+                </div><!-- end col -->
+
+                <div class="col-md-3">
+                    <div class="box m30 hei">
+                        <i class="flaticon-computer-tool-for-education"></i>
+                        <h4>User Dashboard</h4>
+                        <p>View your recommended paths, progress, and courses all in one clean and organized dashboard.
+                        </p>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 hidden-sm hidden-xs">
+                    <div class="custom-module">
+                        <img src="~/images/pic3.png" alt="" class="img-responsive wow slideInLeft">
+                    </div><!-- end module -->
+                </div><!-- end col -->
+                <div class="col-md-8">
+                    <div class="custom-module p40l">
+                        <h2>Why Choose Us?</h2>
+
+                        <p>
+                            Whether you're just getting started or looking to pivot into a new AI-related career,
+                            our platform is here to guide you. By analyzing your current skills and interests,
+                            we recommend personalized AI career paths along with curated courses to help you
+                            grow with confidence. Explore, learn, and build your future — one step at a time.
+                        </p>
+
+                        <hr class="invis" style="width: 60%">
+
+                        <div class="row">
+                            <ul class="check">
+                                <li>Personalized Career Recommendations</li>
+                                <li>Course Guidance per Career Path</li>
+                                <li>Skill-Level Based Matching</li>
+                                <li>AI-Powered Decision System</li>
+                                <li>User Progress Awareness</li>
+                            </ul><!-- end check -->
+                        </div><!-- end row -->
+
+                        <hr class="invis" style="width: 60%">
+                    </div><!-- end module -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+
+    <section class="section db" id="stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="stat-count">
+                        <h4>@Model.StudentCount</h4>
+                        <h3><i class="flaticon-black-graduation-cap-tool-of-university-student-for-head"></i> Total
+                            Students</h3>
+                    </div><!-- stat-count -->
+                </div><!-- end col -->
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="stat-count">
+                        <h4>@Model.CourseCount</h4>
+                        <h3><i class="flaticon-black-graduation-cap-tool-of-university-student-for-head"></i> Total
+                            Courses</h3>
+                    </div><!-- stat-count -->
+                </div><!-- end col -->
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="stat-count">
+                        <h4>@Model.TrackCount</h4>
+                        <h3><i class="flaticon-black-graduation-cap-tool-of-university-student-for-head"></i> Total
+                            Tracks</h3>
+                    </div><!-- stat-count -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </section>
+
+    <div class="copyrights">
+        <div class="container">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <div class="cop-logo">
+                        <a href="#"><img src="~/images/logo.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end container -->
+    </div><!-- end copy -->
+    </div><!-- end wrapper -->
+
+</body>
+
+</html>

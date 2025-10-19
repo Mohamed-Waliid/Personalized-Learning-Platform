@@ -1,0 +1,17 @@
+﻿@model TrackViewModel
+
+@{
+    ViewData["Title"] = "Delete Track";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Delete Track</h2>
+    <p>Are you sure you want to delete the track "@Model.Name"?</p>
+
+    <form asp-action="SaveDelete" method="post">
+        <input type="hidden" asp-for="ID" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="ShowAll" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

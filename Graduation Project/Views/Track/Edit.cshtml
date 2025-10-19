@@ -1,0 +1,47 @@
+﻿@model TrackViewModel
+
+@{
+    ViewData["Title"] = "Edit Track";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Edit Track</h2>
+    <p>Edit the information of the selected track below</p>
+
+    <form asp-action="SaveEdit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="ImageURL" />
+
+        @* <div asp-validation-summary="All" class="alert alert-danger" style="font-size: 0.95rem; padding: 15px; margin-bottom: 20px; border-radius: 8px;"></div> *@
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">Track Title</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Current Image</label><br />
+            <img src="@Model.ImageURL" alt="Current Track Image" style="max-height: 160px; border-radius: 10px;" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TrackImageFile" class="form-label">Change Image (Optional)</label>
+            <input type="file" asp-for="TrackImageFile" class="form-control" accept="image/*" />
+            <span asp-validation-for="TrackImageFile" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-submit">Save Changes</button>
+        <a asp-action="ShowAll" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

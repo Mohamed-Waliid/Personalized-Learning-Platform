@@ -1,0 +1,18 @@
+@model ContactViewModel
+
+@{
+    ViewData["Title"] = "Contact Us";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Message Sent!</h2>
+    <p>Thank you for taking the time to contact us, we'll reply as soon as possible!</p>
+    <p>You will be redirected to the home page shortly...</p>
+</div>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '@Url.Action("Index", "Home")';
+    }, 5000);
+</script>

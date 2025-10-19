@@ -1,0 +1,22 @@
+﻿@model CreateRoleViewModel
+
+@{
+    ViewData["Title"] = "Add Role";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Add New Role</h2>
+    <p>Fill in the role information below</p>
+
+    <form asp-action="SaveCreate" method="post">
+        <div class="form-group">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" placeholder="Enter role name"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-submit">Create Role</button>
+        <a asp-action="Index" asp-controller="Dashboard" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

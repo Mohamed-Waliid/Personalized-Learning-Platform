@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+@{
+    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Edulogy Platform</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Site Icons -->
+    <link rel="shortcut icon" href="~/images/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/images/apple-touch-icon.png">
+
+    <!-- Mobile Meta -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,400i,700,700i" rel="stylesheet">
+
+    <!-- Bootstrap and Template CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/animate.css" />
+    <link rel="stylesheet" href="~/css/carousel.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/css/prettyPhoto.css" />
+    <link rel="stylesheet" href="~/style.css" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true">
+
+    <style>
+        /* Section styles */
+        #tracks {
+            padding: 40px 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .section-description {
+            font-size: 1.7rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Track Grid */
+        .track-grid {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+        }
+
+        .track-layout {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+        }
+
+        /* Track Item */
+        .track-item {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .recommendation {
+            flex: 1.4;
+        }
+
+        .all-tracks {
+            flex: 1.5;
+        }
+
+        /* Track Content */
+        .track-content {
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Track Description */
+        .track-description {
+            margin-top: 10px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        /* Vertical Divider */
+        .vertical-divider {
+            width: 1.6px;
+            background-color: #163A70;
+            margin: 0 30px;
+        }
+
+        /* Track List */
+        .track-list {
+            list-style: none;
+            padding-left: 0;
+            line-height: 1.7;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        .track-list li {
+            margin-bottom: 10px;
+        }
+
+
+
+        /* css related to courses section */
+
+        .courses-section {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            padding: 70px 0;
+            background-color: #f9f9f9;
+            border-radius: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .section-header {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .section-description {
+            font-size: 1.8rem;
+            color: #777;
+            line-height: 1.7;
+        }
+
+        .course-slider-wrapper {
+            position: relative;
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.2rem;
+            color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .slider-button-prev {
+            left: -60px;
+        }
+
+        .slider-button-next {
+            right: -60px;
+        }
+
+        .course-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 30px;
+            padding: 0 20px 20px 20px;
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .course-slider::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari, Opera */
+        }
+
+        .course-card {
+            min-width: 320px;
+            max-width: 320px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease-in-out;
+            border: 1px solid #ddd;
+        }
+
+        .course-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            /* Make the entire card clickable */
+        }
+
+        .course-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .course-card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .course-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .course-details {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+        .course-level {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .course-actions {
+            margin-top: 20px;
+        }
+
+        .explore-btn {
+            background-color: #FFC107;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .explore-btn svg {
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .explore-btn:hover {
+            background-color: #E0A800;
+            /* Darker shade for hover */
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+    <nav class="c-navbar">
+        <div class="c-navbar-left">
+            <a class="logo" href="~/"><img src="~/images/logo.png" alt=""></a>
+        </div>
+
+        <div class="c-navbar-center">
+            <a class="c-nav-link" href="~/#" data-link-type="section">Home</a>
+            <a class="c-nav-link" href="~/#tracks" data-link-type="section">Tracks</a>
+            <a class="c-nav-link" href="~/#courses" data-link-type="section">Courses</a>
+            <a class="c-nav-link" asp-controller="dashboard" asp-action="index" data-link-type="page">Dashboard</a>
+            <a class="c-nav-link" asp-controller="contact" asp-action="index" data-link-type="page">Contact</a>
+        </div>
+
+        <div class="c-navbar-right">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a class="c-nav-link" asp-area="" asp-controller="account" asp-action="logout">Log Out</a>
+                <a class="c-nav-link" asp-area="" asp-action="profile" asp-controller="account" asp-route-ID="@userId">
+                    <img src="~/images/p1.png" width="64px" height="64px"/>
+                </a>
+            }
+            else
+            {
+                <a class="c-nav-link" asp-area="" asp-controller="account" asp-action="register">Register</a>
+                <a class="c-nav-link" asp-area="" asp-controller="account" asp-action="login">Login</a>
+            }
+        </div>
+    </nav><!-- end navbar -->
+
+    <div>
+        @RenderBody()
+    </div>
+
+    @* <footer class="border-top footer text-muted">
+    <div>
+    &copy; 2024 - Educational_Platform - <a asp-area="" asp-controller="Home"
+    asp-action="Privacy">Privacy</a>
+    </div>
+    </footer> *@
+
+    <!-- Additional Template Scripts -->
+    <script src="~/js/animate.js"></script>
+    <script src="~/js/carousel.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/parallax.js"></script>
+    <script src="~/js/custom.js"></script>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/carousel.js"></script>
+    <script src="~/js/animate.js"></script>
+    <script src="~/js/custom.js"></script>
+    <!-- VIDEO BG PLUGINS -->
+
+    <!-- jQuery and jQuery Validation Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+</html>

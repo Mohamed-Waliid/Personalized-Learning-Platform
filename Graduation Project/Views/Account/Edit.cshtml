@@ -1,0 +1,192 @@
+@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+
+<style>
+    /* Custom dropdown styles */
+    .custom-select-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-select {
+        position: relative;
+    }
+
+    .custom-select-trigger {
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #495057;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .custom-select-trigger:after {
+            content: "▼";
+            font-size: 12px;
+            color: #6c757d;
+            transition: transform 0.2s;
+        }
+
+    .custom-select.open .custom-select-trigger:after {
+        transform: rotate(180deg);
+    }
+
+    .custom-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #ced4da;
+        border-top: none;
+        border-radius: 0 0 4px 4px;
+        background: #fff;
+        z-index: 10;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-select.open .custom-options {
+        display: block;
+    }
+
+    .custom-option {
+        padding: 10px 12px;
+        font-size: 1rem;
+        color: #495057;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: block; /* This ensures options stack vertically */
+        width: 100%; /* Full width for each option */
+    }
+
+        .custom-option:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .custom-option.selected {
+            background-color: #e8f0fe;
+            color: #007bff;
+        }
+
+    /* Hide original select */
+    .original-select {
+        display: none;
+    }
+</style>
+
+<div class="login-container">
+    <h2>Edit Profile</h2>
+    <p class="text-muted">Edit the desired information below.</p>
+
+    <form asp-action="SaveEdit" method="post">
+        <div asp-validation-summary="All" class="text-danger" style="font-size: 0.95rem; padding: 15px; margin-bottom: 20px; border-radius: 8px;"></div>
+
+        <input type="hidden" asp-for="ID" />
+
+        <div class="form-group">
+            <label asp-for="FullName" class="form-label">Full Name</label>
+            <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SelectedRole" class="form-label">Role</label>
+            <select asp-for="SelectedRole" class="form-control original-select"
+                    asp-items="@(new SelectList(Model.Roles, "Name", "Name"))">
+                <option value="">-- Select a Role --</option>
+            </select>
+
+            <div class="custom-select-wrapper">
+                <div class="custom-select" id="customSelect">
+                    <span class="custom-select-trigger">-- Select a Role --</span>
+                    <div class="custom-options">
+                        @foreach (var role in Model.Roles)
+                        {
+                            <span class="custom-option" data-value="@role.Name">@role.Name</span>
+                        }
+                    </div>
+                </div>
+                <input type="hidden" asp-for="SelectedRole" id="SelectedRole" />
+            </div>
+
+            <span asp-validation-for="SelectedRole" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-submit">Save Changes</button>
+        <a asp-action="Profile" asp-route-ID="@Model.ID" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const originalSelect = document.querySelector('select[name="SelectedRole"]');
+            const customSelect = document.getElementById('customSelect');
+            const customSelectTrigger = customSelect.querySelector('.custom-select-trigger');
+            const customOptions = customSelect.querySelector('.custom-options');
+            const hiddenInput = document.getElementById('SelectedRole');
+            const customOptionItems = customSelect.querySelectorAll('.custom-option');
+
+            // Initialize with original select value
+            if (originalSelect.value) {
+                const selectedOption = originalSelect.querySelector(`option[value="${originalSelect.value}"]`);
+                if (selectedOption) {
+                    customSelectTrigger.textContent = selectedOption.textContent;
+                }
+            }
+
+            // Toggle dropdown
+            customSelectTrigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                customSelect.classList.toggle('open');
+            });
+
+            // Select option
+            customOptionItems.forEach(option => {
+                option.addEventListener('click', function () {
+                    customOptionItems.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    customSelectTrigger.textContent = this.textContent;
+                    hiddenInput.value = this.getAttribute('data-value');
+                    originalSelect.value = this.getAttribute('data-value');
+                    customSelect.classList.remove('open');
+                });
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function () {
+                customSelect.classList.remove('open');
+            });
+
+            customOptions.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,191 @@
+﻿@using Graduation_Project.ViewModels.Course
+@model IEnumerable<ShowAllCourseViewModel>
+
+@{
+    ViewData["Title"] = "CourseTracks by Track";
+}
+
+<style>
+    .all-courses-section {
+        padding: 60px 0;
+        background-color: #f9f9f9;
+    }
+
+    .all-courses-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .all-courses-intro-section {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .all-courses-intro-title {
+        font-size: 3.2rem;
+        font-weight: 700;
+        color: #163A70;
+        margin-bottom: 20px;
+    }
+
+    .all-courses-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .all-courses-card {
+        width: 100%;
+        max-width: 340px;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .all-courses-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .all-courses-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+    .all-courses-card-body {
+        padding: 25px;
+    }
+
+    .all-courses-card-title {
+        color: #163A70;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .all-courses-card-text {
+        line-height: 1.7;
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .all-courses-details {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #1C1C1C;
+        text-align: left;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+        .all-courses-details p {
+            margin-bottom: 10px;
+        }
+
+    .btn-back-to-tracks {
+        background-color: #6c757d;
+        color: #fff;
+        padding: 12px 28px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .btn-back-to-tracks:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+</style>
+
+
+<section class="all-courses-section">
+    <div class="all-courses-container">
+        <div class="all-courses-intro-section">
+            <h2 class="all-courses-intro-title">@ViewBag.trackName Track</h2>
+        </div>
+
+
+        @if (!Model.Any())
+        {
+            <p class="text-muted text-center">No courses found for this track.</p>
+        }
+        else
+        {
+            <div class="all-courses-intro-section">
+                <p class="all-courses-intro-text">
+                    Browse all available courses for <strong>@ViewBag.trackName</strong> track.
+                </p>
+                <div class="all-courses-search-container">
+                    <input type="text"
+                           id="courseSearch"
+                           class="all-courses-search-bar"
+                           placeholder="Search courses by title..." />
+                </div>
+            </div>
+
+            <div class="all-courses-row" id="coursesContainer">
+                @foreach (var course in Model)
+                {
+                    <div class="all-courses-card">
+                        <img src="@course.ImagePath" alt="@course.Title" />
+                        <div class="all-courses-card-body">
+                            <h5 class="all-courses-card-title">@course.Title</h5>
+                            <p class="all-courses-card-text">@course.Description</p>
+                            <div class="all-courses-details">
+                                <p><strong>👤 Instructor:</strong> @course.InstructorName</p>
+                                <p><strong>📅 Duration:</strong> @course.Duration</p>
+                                <p><strong>🎓 Level:</strong> @course.DifficultyLevel</p>
+                                <p><strong>⭐ Enrolled:</strong> @course.EnrolledCount</p>
+                            </div>
+                            <a asp-action="Details" asp-controller="Course" asp-route-CourseID="@course.ID" class="all-courses-btn">View Course</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a asp-action="ShowAll" asp-controller="Track"
+               class="btn-back-to-tracks">
+                ← Back to All Tracks
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    const searchInput = document.getElementById('courseSearch');
+    const coursesContainer = document.getElementById('coursesContainer');
+    const courseCards = coursesContainer.getElementsByClassName('all-courses-card');
+
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase();
+
+        Array.from(courseCards).forEach(card => {
+            const titleElement = card.querySelector('.all-courses-card-title');
+            const title = titleElement.textContent.toLowerCase();
+
+            if (title.includes(searchTerm)) {
+                card.style.display = ''; // Show the card
+            } else {
+                card.style.display = 'none'; // Hide the card
+            }
+        });
+    });
+</script>

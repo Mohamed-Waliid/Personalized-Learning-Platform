@@ -1,0 +1,239 @@
+﻿@model CourseDetailsViewModel
+
+@{
+    ViewData["Title"] = @Model.Title;
+}
+
+<section class="course-details-section">
+    <div class="course-details-container">
+        <!-- Feedback Messages -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-error">@TempData["Error"]</div>
+        }
+
+        <!-- Basic Information Section -->
+        <div class="course-info-card">
+            <img src="@Model.ImagePath" alt="@Model.Title" class="course-info-image" />
+            <div class="course-info-content">
+                <h2 class="course-info-title">@Model.Title</h2>
+                <p class="course-info-description">@Model.Description</p>
+                <div class="course-info-details">
+                    <p><strong>👤 Instructor:</strong> @Model.Instructor.FullName</p>
+                    <p><strong>📅 Duration:</strong> @Model.Duration</p>
+                    <p><strong>🎓 Level:</strong> @Model.DifficultyLevel</p>
+                    <p><strong>⭐ Enrolled:</strong> @Model.EnrolledCount</p>
+                    <p><strong>🏷️ Tracks:</strong> @string.Join(", ", Model.Tracks)</p>
+                </div>
+                @if (Model.IsEnrolled)
+                {
+                    <div class="progress-section">
+                        <h4>Your Progress</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: @Model.Progress%"></div>
+                        </div>
+                        <p>@Model.Progress.ToString("F0")% Complete</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Call to Action for Non-Enrolled Students -->
+        @if (!Model.IsEnrolled && User.IsInRole("Student"))
+        {
+            <div class="cta-section">
+                <h3>Ready to Start Learning?</h3>
+                <p>Join @Model.EnrolledCount other students and take the first step toward mastering @Model.Title!</p>
+                <form method="post">
+                    <button asp-action="Enroll" asp-controller="Enrollment" asp-route-courseId="@Model.Id"
+                        class="btn btn-gold">Enroll Now</button>
+                </form>
+            </div>
+        }
+
+        <!-- Materials Section -->
+        <div class="course-content-section">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 class="cta-section-title">Course Materials</h3>
+                @if (User.IsInRole("Admin") || Model.isOwner)
+                {
+                    <a asp-controller="Material" asp-action="Add" asp-route-CourseID="@Model.Id" class="btn-primary"
+                        style="width: 150px">Add Material</a>
+                }
+            </div>
+            @if (Model.Materials.Any())
+            {
+                <div class="content-grid">
+                    @foreach (var material in Model.Materials)
+                    {
+                        <div class="content-card">
+                            <h4 class="details-h4">@material.Title</h4>
+                            <p>Type: @material.Type</p>
+                            @if ((Model.IsEnrolled && User.IsInRole("Student")) || Model.isOwner || User.IsInRole("Admin"))
+                            {
+                                <p><a href="@material.Url" target="_blank">Access Material</a></p>
+                                @if (User.IsInRole("Student"))
+                                {
+                                    if (material.IsCompleted)
+                                    {
+                                        <p>Status: <span style="color: green">Completed</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Status: Not Completed</p>
+                                    }
+                                    @if (!material.IsCompleted)
+                                    {
+                                        <form asp-action="MarkComplete" asp-controller="Material" method="post">
+                                            <input type="hidden" name="CourseID" value="@Model.Id" />
+                                            <input type="hidden" name="MaterialID" value="@material.Id" />
+                                            <button type="submit"  style="padding: 8px;" class="btn btn-primary">Mark as complete</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="MarkUnComplete" asp-controller="Material" method="post">
+                                            <input type="hidden" name="CourseID" value="@Model.Id" />
+                                            <input type="hidden" name="MaterialID" value="@material.Id" />
+                                            <button type="submit" style="padding: 8px" class="btn btn-primary">Mark as uncomplete</button>
+                                        </form>
+                                    }
+                                }
+                                else
+                                {
+                                    <a style="width: 100%; padding: 8px; margin-bottom: 5px;" asp-controller="Material" asp-action="Edit"
+                                        class="btn btn-secondary" asp-route-ID="@material.Id">Edit</a>
+                                    <a style="width: 100%; padding: 8px;" asp-controller="Material" asp-action="Delete" class="btn btn-danger"
+                                        asp-route-ID="@material.Id">Delete</a>
+                                }
+                            }
+                            else
+                            {
+                                <p class="locked">Enroll to access this material</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No materials available for this course.</p>
+            }
+        </div>
+
+        <!-- Quizzes Section -->
+        <div class="course-content-section">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 class="cta-section-title">Quizzes</h3>
+                @if (User.IsInRole("Admin") || Model.isOwner)
+                {
+                    <a class="btn-primary" style="width: 150px" asp-action="Add" asp-controller="Quiz"
+                        asp-route-CourseID="@Model.Id">Add Quiz</a>
+                }
+            </div>
+            @if (Model.Quizzes.Any())
+            {
+                <div class="content-grid">
+                    @foreach (var quiz in Model.Quizzes)
+                    {
+                        <div class="content-card">
+                            <h4 class="details-h4">@quiz.Title</h4>
+                            @if ((Model.IsEnrolled && User.IsInRole("Student")) || User.IsInRole("Admin") || Model.isOwner)
+                            {
+                                <p>Difficulty: @quiz.DifficultyLevel</p>
+                                @if (User.IsInRole("Student"))
+                                {
+                                    if (@quiz.Status == "Completed")
+                                    {
+                                        <p>Status: <span style="color: green">Completed</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Status: @quiz.Status</p>
+                                    }
+                                    <a  style="padding: 8px;" asp-action="TakeQuiz" asp-controller="Quiz" asp-route-CourseID="@Model.Id"
+                                        asp-route-QuizID="@quiz.Id" class="btn btn-primary">Take Quiz</a>
+                                }
+                                else
+                                {
+                                    <a style="width: 100%; padding: 8px; margin-bottom: 5px;" asp-controller="Question" asp-action="ShowAll"
+                                        class="btn btn-primary" asp-route-QuizID="@quiz.Id">View Questions</a>
+                                    <a style="width: 100%; padding: 8px; margin-bottom: 5px;" asp-controller="Quiz" asp-action="Edit"
+                                        class="btn btn-secondary" asp-route-ID="@quiz.Id">Edit</a>
+                                    <a style="width: 100%; padding: 8px" asp-controller="Quiz" asp-action="Delete" class="btn btn-danger"
+                                        asp-route-ID="@quiz.Id">Delete</a>
+                                }
+                            }
+                            else
+                            {
+                                <p class="locked">Enroll to access this quiz</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No quizzes available for this course.</p>
+            }
+        </div>
+
+        <!-- Projects Section -->
+        <div class="course-content-section">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 class="cta-section-title">Projects</h3>
+                @if (User.IsInRole("Admin") || Model.isOwner)
+                {
+                    <a class="btn-primary" style="width: 150px" asp-action="Add" asp-controller="Project"
+                        asp-route-CourseID="@Model.Id">Add Project</a>
+                }
+            </div>
+
+            @if (Model.Projects.Any())
+            {
+                <div class="content-grid">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <div class="content-card">
+                            <h4 class="details-h4">@project.Title</h4>
+                            <p class="p-desc">@project.Description</p>
+                            @if ((Model.IsEnrolled && User.IsInRole("Student")) || User.IsInRole("Admin") || Model.isOwner)
+                            {
+                                <p>Difficulty Level: @project.DifficultyLevel</p>
+                                if (User.IsInRole("Student"))
+                                {
+                                    if (project.Status == "Available")
+                                    {
+                                        <p>Status: <span style="color: green">@project.Status</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p>Status: @project.Status</p>
+                                    }
+                                }
+                                else
+                                {
+                                    <a style="width: 100%; margin-bottom: 5px; padding: 8px;" asp-controller="Project" asp-action="Edit"
+                                        class="btn btn-secondary" asp-route-ID="@project.Id">Edit</a>
+                                    <a style="width: 100%; padding: 8px;" asp-controller="Project" asp-action="Delete" class="btn btn-danger"asp-route-ID="@project.Id">Delete</a>
+                                }
+                            }
+                            else
+                            {
+                                <p class="locked">Enroll to access this project</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No projects available for this course.</p>
+            }
+        </div>
+    </div>
+</section>

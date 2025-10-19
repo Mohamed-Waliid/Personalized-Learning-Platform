@@ -1,0 +1,44 @@
+﻿@model Graduation_Project.ViewModels.Question.QuestionFormViewModel
+
+@{
+    ViewData["Title"] = "Edit Question";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container" style=" max-width: 450px;width: 90%;">
+    <h2>Edit Question</h2>
+    <p>Update the question details below.</p>
+
+    <form asp-action="SaveEdit" method="post">
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="QuizID" />
+
+        <div class="form-group">
+            <label asp-for="Text" class="form-label">Question Text</label>
+            <input asp-for="Text" class="form-control" />
+            <span asp-validation-for="Text" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
+            <input asp-for="CorrectAnswer" class="form-control" />
+            <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="AnswerOptions" class="form-label">Answer Options</label>
+            <textarea asp-for="AnswerOptions" class="form-control" rows="3"
+                placeholder="e.g. Option A, Option B, Option C, Option D"></textarea>
+            <span asp-validation-for="AnswerOptions" class="text-danger"></span>
+            <small class="text-muted">Separate each option with a comma (,).</small>
+        </div>
+
+        <button type="submit" class="btn btn-submit">Update Question</button>
+        <a style="width: 100%" asp-action="ShowAll" asp-route-QuizID="@Model.QuizID"
+            class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,42 @@
+@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <img src="~/images/p1.png" alt="Profile Picture" class="profile-image" />
+            <div class="profile-info">
+                <h2>@Model.FullName</h2>
+                @foreach (var role in Model.Roles)
+                {
+                    <p class="role">@role.Name</p>
+                }
+            </div>
+        </div>
+
+        <div class="profile-body">
+            <div class="info-row">
+                <span class="label">Username:</span>
+                <span class="value">@Model.UserName</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">@Model.Email</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value">@Model.PhoneNumber</span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a style="width: 100%; margin-right: 5px;" asp-action="Edit" asp-route-ID="@Model.ID"
+                class="btn btn-primary">Edit</a>
+            <a style="width: 100%" asp-action="ChangePassword" asp-route-ID="@Model.ID" class="btn btn-secondary">
+                Change Password</a>
+        </div>
+    </div>
+</div>

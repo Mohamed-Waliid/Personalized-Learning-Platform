@@ -1,0 +1,107 @@
+﻿@model IEnumerable<EnrolledCoursesViewModel>
+
+<h1>My Enrolled Courses</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">@TempData["Error"]</div>
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<div class="course-grid">
+    @foreach (var course in Model)
+    {
+        <div class="course-card">
+            <img src="@course.ImageUrl" alt="@course.Title" class="course-image" />
+            <h3>@course.Title</h3>
+            <p>Difficulty: @course.DifficultyLevel | Duration: @course.Duration hours</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: @course.Progress%"></div>
+            </div>
+            <p>Progress: @course.Progress.ToString("F0")%</p>
+            <a asp-action="Details" asp-controller="Courses" asp-route-CourseID="@course.CourseId" class="btn btn-navy">View Course</a>
+            <a asp-action="DeleteEnrollment" asp-route-id="@course.CourseId" class="btn btn-gold" onclick="return confirm('Are you sure you want to unenroll?');">Unenroll</a>
+        </div>
+    }
+</div>
+
+<style>
+    .course-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .course-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .course-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .progress-bar {
+        background: #e0e0e0;
+        border-radius: 4px;
+        height: 10px;
+        margin: 10px 0;
+    }
+
+    .progress-fill {
+        background: #d4a017;
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    .btn-navy {
+        background: #1a2b4b;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin: 5px;
+    }
+
+        .btn-navy:hover {
+            background: #0f1c35;
+        }
+
+    .btn-gold {
+        background: #d4a017;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin: 5px;
+    }
+
+        .btn-gold:hover {
+            background: #b58900;
+        }
+
+    .alert-success {
+        background: #d4a017;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .alert-error {
+        background: #a94442;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+</style>

@@ -1,0 +1,17 @@
+@model Project
+
+@{
+    ViewData["Title"] = "Delete Project";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Delete Project</h2>
+    <p>Are you sure you want to delete the project "@Model.Title" that belongs to the course "@Model.Course.Title"?</p>
+
+    <form asp-action="SaveDelete" method="post">
+        <input type="hidden" asp-for="ID" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Details" asp-controller="Course" asp-route-CourseID="@Model.CourseID" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

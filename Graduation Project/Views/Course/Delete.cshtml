@@ -1,0 +1,17 @@
+﻿@model Course
+
+@{
+    ViewData["Title"] = "Delete Course";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Delete Course</h2>
+    <p>Are you sure you want to delete the course "@Model.Title"?</p>
+
+    <form asp-action="SaveDelete" method="post">
+        <input type="hidden" asp-for="ID" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="index" asp-controller="Dashboard" asp-route-ID="@Model.ID" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,74 @@
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-error" role="alert">
+        <span class="alert-icon">⚠️</span>
+        <span class="alert-text">@TempData["Message"]</span>
+        <button type="button" class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+}
+<div class="my-box">
+    <div class="career-section">
+        <h2 class="section-title">Your Recommended Career Track</h2>
+        <div class="career-card">
+            @if (Model.LastRecommendation != null)
+            {
+                <h3 class="career-title">@Model.LastRecommendation.Track.Name</h3>
+                <p class="career-description">
+                    Based on your interests and skills, <strong>@Model.LastRecommendation.Track.Name</strong> is a
+                    recommended track for you.
+                </p>
+            }
+            else
+            {
+                <p class="career-description cent-p">You haven't been recommended a track before</p>
+                <div class="btn-wrapper">
+                    <a asp-action="index" asp-controller="recommendation" class="btn btn-primary">Get a track
+                        recommendation</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 class="section-title">Your Courses</h2>
+    <div class="all-courses-row" id="coursesContainer">
+        @if (Model.CoursesProgress != null)
+        {
+            @for (int i = 0; i < Model.CoursesProgress.Count; i++)
+            {
+                var (course, progress) = Model.CoursesProgress[i];
+                <div class="all-courses-card">
+                    <img src="@course.ImagePath" alt="@course.Title" />
+                    <div class="all-courses-card-body">
+                        <h5 class="all-courses-card-title">@course.Title</h5>
+                        <p class="all-courses-card-text">@course.Description</p>
+                        <div class="all-courses-details">
+                            <p><strong>👤 Instructor:</strong> @course.InstructorName</p>
+                            <p><strong>📅 Duration:</strong> @course.Duration</p>
+                            <p><strong>🎓 Level:</strong> @course.DifficultyLevel</p>
+                            <p><strong>⭐ Enrolled:</strong> @course.EnrolledCount</p>
+                        </div>
+                        <div class="progress-container">
+                            <div class="dash-progress-bar" style="width: @progress%"></div>
+                        </div>
+                        <a style="width: 100%; margin-top: 5px;" asp-action="Details" asp-controller="Course"
+                            asp-route-CourseID="@course.ID" class="btn btn-primary">View Course</a>
+                        <a style="width: 100%" asp-action="DeleteEnrollment" asp-controller="Enrollment"
+                            asp-route-id="@ViewBag.EnrollmentIds[i]" class="btn btn-danger">Unenroll</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>You are currently not enrolled in any course.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,140 @@
+@model ShowAllViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="admin-dashboard">
+    <h1>Admin Dashboard</h1>
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('students')">Students</button>
+        <button class="tab-button" onclick="showTab('instructors')">Instructors</button>
+        <button class="tab-button" onclick="showTab('admins')">Admins</button>
+        <button class="tab-button" onclick="showTab('roles')">Roles</button>
+    </div>
+
+    <div id="students" class="tab-content active">
+        <h2>All Students (@Model.Students.Count)</h2>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.Students)
+                {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.FullName</td>
+                        <td>@student.Email</td>
+                        <td>
+                            <a asp-action="AssignAdminRole" asp-controller="Roles" asp-route-UserId="@student.Id"
+                                class="btn btn-primary">Assign Admin</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="instructors" class="tab-content">
+        <h2>All Instructors (@Model.Instructors.Count)</h2>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var instructor in Model.Instructors)
+                {
+                    <tr>
+                        <td>@instructor.Id</td>
+                        <td>@instructor.FullName</td>
+                        <td>@instructor.Email</td>
+                        <td>
+                            <a asp-action="AssignAdminRole" asp-controller="Roles" asp-route-UserId="@instructor.Id"
+                                class="btn btn-primary">Assign Admin</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="admins" class="tab-content">
+        <h2>All Admins (@Model.Admins.Count)</h2>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var admin in Model.Admins)
+                {
+                    <tr>
+                        <td>@admin.Id</td>
+                        <td>@admin.FullName</td>
+                        <td>@admin.Email</td>
+                        <td>
+                            <a asp-action="RevokeAdminRole" asp-controller="Roles" asp-route-Id="@admin.Id"
+                                class="btn btn-danger">Revoke Admin</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="roles" class="tab-content">
+        <h2>All Roles (@Model.Roles.Count)</h2>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model.Roles)
+                {
+                    <tr>
+                        <td>@role.Id</td>
+                        <td>@role.Name</td>
+                        <td>
+                            <a asp-action="Delete" asp-controller="Roles" asp-route-RoleId="@role.Id"
+                                class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a style="margin-top: 10px;" asp-action="Create" asp-controller="Roles" class="btn btn-primary">Create New
+            Role</a>
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        const tabs = document.querySelectorAll('.tab-content');
+        const buttons = document.querySelectorAll('.tab-button');
+        tabs.forEach(t => t.classList.remove('active'));
+        buttons.forEach(b => b.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+</script>

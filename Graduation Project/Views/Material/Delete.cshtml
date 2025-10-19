@@ -1,0 +1,18 @@
+@model LearningMaterial
+
+@{
+    ViewData["Title"] = "Delete Material";
+    Layout = "~/Views/Shared/_Layout_form.cshtml";
+}
+
+<div class="form-container">
+    <h2>Delete course material</h2>
+    <p>Are you sure you want to delete the course material "@Model.Title" that belongs to the course "@ViewBag.course.Title"?</p>
+
+    <form asp-action="SaveDelete" method="post">
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" name="CourseID" value="@ViewBag.course.ID" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Details" asp-controller="Course" asp-route-CourseID="@ViewBag.course.ID" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
